@@ -19,7 +19,13 @@
               </thead>
               <tbody>
                 <tr v-for="(cust, index) in customers" :key="index">
-                  <td>{{ cust.name }}</td>
+                  <td>
+                    <p>
+                      {{ cust.name }} <br />
+                      {{ cust.contact }} <br />
+                      {{ cust.email }}
+                    </p>
+                  </td>
                   <td>{{ cust.address }}</td>
                   <td>{{ cust.discount_type }}</td>
                   <td>{{ cust.discount_amount }}</td>
@@ -45,17 +51,13 @@ export default {
 
     //mounted
     onMounted(() => {
-      //panggil function "getDataCustomers"
       getDataCustomers();
     });
 
-    //function "getDataCustomers"
     function getDataCustomers() {
-      //get API from Express Backend
       axios
         .get("http://localhost:8000/api/customers")
         .then((response) => {
-          //assign state customers with response data
           customers.value = response.data.data;
         })
         .catch((error) => {
