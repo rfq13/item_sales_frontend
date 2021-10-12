@@ -15,6 +15,7 @@
                   <th scope="col">Alamat</th>
                   <th scope="col">Discount Type</th>
                   <th scope="col">Discount</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
@@ -29,7 +30,10 @@
                   <td>{{ cust.address }}</td>
                   <td>{{ cust.discount_type }}</td>
                   <td>{{ cust.discount_amount }}</td>
-                  <td class="text-center"></td>
+                  <td class="text-center">
+                    <router-link :to="{ name: 'customers.edit', params: { id: cust.id } }" class="btn btn-sm btn-primary mr-1">EDIT</router-link> |
+                    <a href="javascript:void(0)" @click="deleteCustomer($event, cust.id)" class="btn btn-sm btn-danger mr-1">DELETE</a>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -64,11 +68,24 @@ export default {
           console.log(error.response.data);
         });
     }
-
-    //return
+    function deleteCustomer(e, id) {
+      e;
+      if (confirm("customer akan terhapus, yakin?")) {
+        axios
+          .post("http://localhost:8000/api/customers/delete/" + id)
+          .then((response) => {
+            console.log(response);
+            getDataCustomers();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
     return {
       customers,
       getDataCustomers,
+      deleteCustomer,
     };
   },
 };
