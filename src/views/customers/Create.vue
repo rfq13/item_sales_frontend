@@ -23,14 +23,15 @@
                   <input type="email" class="form-control" v-model="customer.email" placeholder="email" aria-label="email" name="email" />
                 </div>
                 <div class="col-sm-2">
-                  <select class="form-select" aria-label="Default select example" v-model="customer.discount_type" name="discount_type">
-                    <option selected disabled>Open this select menu</option>
+                  <!-- <label for="discount_type">Dsicount Type</label> -->
+                  <select class="form-select" id="discount_type" aria-label="Default select example" v-model="customer.discount_type" name="discount_type">
+                    <option selected value="">Discount Type</option>
                     <option value="precentage">precentage</option>
                     <option value="fix">fix</option>
                   </select>
                 </div>
                 <div class="col-sm">
-                  <input type="number" class="form-control" v-model="customer.discount_amount" placeholder="discount_amount" aria-label="discount_amount" />
+                  <input type="number" class="form-control" v-model="customer.discount_amount" placeholder="discount amount" aria-label="discount_amount" />
                 </div>
               </div>
               <div class="row g-3 mt-2">
