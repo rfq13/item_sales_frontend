@@ -6,21 +6,23 @@
           <div class="card-body">
             <h4>DATA CUSTOMER</h4>
             <hr />
-            <router-link :to="{ name: 'customers.create' }" class="btn btn-md btn-success">TAMBAH ITEM</router-link>
+            <router-link :to="{ name: 'customers.create' }" class="btn btn-md btn-success">TAMBAH CUSTOMER</router-link>
 
             <table class="table table-striped table-bordered mt-4">
               <thead class="thead-dark">
                 <tr>
                   <th scope="col">Name</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Stock</th>
+                  <th scope="col">Alamat</th>
+                  <th scope="col">Discount Type</th>
+                  <th scope="col">Discount</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in customers" :key="index">
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.unit_price }} /{{ item.unit }}</td>
-                  <td>{{ item.stock }}</td>
+                <tr v-for="(cust, index) in customers" :key="index">
+                  <td>{{ cust.name }}</td>
+                  <td>{{ cust.address }}</td>
+                  <td>{{ cust.discount_type }}</td>
+                  <td>{{ cust.discount_amount }}</td>
                   <td class="text-center"></td>
                 </tr>
               </tbody>

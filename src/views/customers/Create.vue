@@ -4,7 +4,7 @@
       <div class="col-md-12">
         <div class="card border-0 rounded shadow">
           <div class="card-body">
-            <h4>TAMBAH ITEM</h4>
+            <h4>TAMBAH CUSTOMER</h4>
             <hr />
             <div v-if="validation.errors" class="mt-2 alert alert-danger">
               <ul class="mt-0 mb-0">
@@ -14,26 +14,33 @@
             <form @submit.prevent="store">
               <div class="row g-3">
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" v-model="item.name" placeholder="name" aria-label="name" name="name" />
+                  <input type="text" class="form-control" v-model="customer.name" placeholder="name" aria-label="name" name="name" />
                 </div>
                 <div class="col-sm-4">
-                  <input type="number" class="form-control" v-model="item.unit_price" placeholder="price" aria-label="unit_price" name="unit_price" />
+                  <input type="text" class="form-control" v-model="customer.contact" placeholder="contact" aria-label="contact" name="contact" />
+                </div>
+                <div class="col-sm-4">
+                  <input type="email" class="form-control" v-model="customer.email" placeholder="email" aria-label="email" name="email" />
                 </div>
                 <div class="col-sm-2">
-                  <select class="form-select" aria-label="Default select example" v-model="item.unit" name="unit">
+                  <select class="form-select" aria-label="Default select example" v-model="customer.discount_type" name="discount_type">
                     <option selected disabled>Open this select menu</option>
-                    <option value="kg">Kg</option>
-                    <option value="pcs">Pcs</option>
+                    <option value="precentage">precentage</option>
+                    <option value="fix">fix</option>
                   </select>
                 </div>
                 <div class="col-sm">
-                  <input type="number" class="form-control" v-model="item.stock" placeholder="stock" aria-label="stock" min="1" />
+                  <input type="number" class="form-control" v-model="customer.discount_amount" placeholder="discount_amount" aria-label="discount_amount" />
                 </div>
               </div>
               <div class="row g-3 mt-2">
                 <div class="col-sm">
+                  <label for="address">Alamat</label>
+                  <textarea name="address" id="address" cols="30" rows="10" class="form-control" v-model="customer.address"></textarea>
+                </div>
+                <div class="col-sm">
                   <div class="custom-file">
-                    <label class="custom-file-label" for="customFile">Gambar Item</label>
+                    <label class="custom-file-label" for="customFile">KTP</label>
                     <input type="file" @change="handleSelectedFile" multiple class="custom-file-input form-control" id="customFile" accept="image/jpeg, image/png" />
                   </div>
                 </div>
@@ -54,18 +61,21 @@ import axios from "axios";
 export default {
   data() {
     return {
-      uploadedItemImages: "",
+      uploadedKtp: "",
     };
   },
   components: {},
   methods: {},
   setup() {
     //state posts
-    const item = reactive({
+    const customer = reactive({
       name: "",
-      unit: "",
-      unit_price: "",
-      stock: "",
+      email: "",
+      contact: "",
+      address: "",
+      discount_amount: "",
+      discount_type: "",
+      ktp: "",
     });
 
     //states
@@ -76,23 +86,27 @@ export default {
 
     //method store
     function store() {
-      let name = item.name;
-      let unit = item.unit;
-      let unit_price = item.unit_price;
-      let stock = item.stock;
+      let name = customer.name;
+      let email = customer.email;
+      let contact = customer.contact;
+      let address = customer.address;
+      let discount_amount = customer.discount_amount;
+      let discount_type = customer.discount_type;
+      let ktp = this.uploadedKtp;
 
       axios
-        .post("http://localhost:8000/api/items", {
-          name: name,
-          unit: unit,
-          unit_price: unit_price,
-          stock: stock,
-          image: this.uploadedItemImages,
+        .post("http://localhost:8000/api/customers", {
+          name,
+          email,
+          contact,
+          address,
+          discount_amount,
+          discount_type,
+          ktp,
         })
         .then(() => {
-          //redirect ke post index
           router.push({
-            name: "items.index",
+            name: "customers.index",
           });
         })
         .catch(function(error) {
@@ -103,19 +117,18 @@ export default {
     }
 
     function handleSelectedFile(event) {
-      // this.removeImage();
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
-      formData.append("remove", this.uploadedItemImages);
+      formData.append("remove", this.uploadedKtp);
 
       axios
-        .post("http://localhost:8000/api/items/image/upload", formData, {
+        .post("http://localhost:8000/api/customers/ktp/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then((response) => {
-          this.uploadedItemImages = response.data.path;
+          this.uploadedKtp = response.data.path;
           console.log(response);
         })
         .catch((errors) => {
@@ -126,9 +139,9 @@ export default {
     }
 
     function removeImage() {
-      if (this.uploadedItemImages.length) {
+      if (this.uploadedKtp.length) {
         axios
-          .post("http://localhost:8000/api/items/image/remove", { path: this.uploadedItemImages })
+          .post("http://localhost:8000/api/customers/ktp/remove", { path: this.uploadedKtp })
           .then((response) => {
             console.log("remove image", response);
           })
@@ -140,7 +153,7 @@ export default {
 
     //return
     return {
-      item,
+      customer,
       validation,
       router,
       store,
